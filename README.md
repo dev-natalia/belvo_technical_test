@@ -84,6 +84,8 @@ Se você já está usando o container da API simulada da Belvo, pode rodar este 
 ```bash
 docker build -t belvo-api-app .
 docker run -p 8001:8001 belvo-api-app
+```
+
 ---
 
 ## 🧠 Estratégias Adotadas
