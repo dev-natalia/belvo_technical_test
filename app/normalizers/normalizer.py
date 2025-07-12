@@ -1,5 +1,5 @@
 from typing import Dict, List
-from datetime import datetime
+from datetime import datetime, timezone
 import pytz
 
 from app.schemas.schemas import (
@@ -72,7 +72,7 @@ class Normalizer:
 
     @staticmethod
     def __get_extraction_date():
-        dt_utc = datetime.now(datetime.timezone.utc)
+        dt_utc = datetime.now(timezone.utc)
 
         tz_sao_paulo = pytz.timezone("America/Sao_Paulo")
         dt_sao_paulo = dt_utc.astimezone(tz_sao_paulo)

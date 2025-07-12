@@ -4,8 +4,8 @@ from datetime import timedelta
 
 class Cache:
     def __init__(self):
-        self.dynamic_client_cache = TTLCache(maxsize=100, ttl=timedelta(hours=24))
-        self.consent_cache = TTLCache(maxsize=100, ttl=timedelta(hours=1))
+        self.dynamic_client_cache = TTLCache(maxsize=100, ttl=86400)  # 24h
+        self.consent_cache = TTLCache(maxsize=100, ttl=3600)  # 1h
 
     def set_dynamic_client_token(self, organization_id: str, token: str):
         self.dynamic_client_cache[organization_id] = token
