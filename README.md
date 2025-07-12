@@ -75,6 +75,15 @@ Content-Type: application/json
 }
 ```
 
+## 🐳 Rodando com Docker
+
+Se você já está usando o container da API simulada da Belvo, pode rodar este projeto em paralelo com Docker também:
+
+### 1. Construa a imagem
+
+```bash
+docker build -t belvo-api-app .
+docker run -p 8001:8001 belvo-api-app
 ---
 
 ## 🧠 Estratégias Adotadas
