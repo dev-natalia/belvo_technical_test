@@ -56,7 +56,7 @@ pip install -r requirements.txt
 2. **Execute a aplicação:**
 
 ```bash
-uvicorn app.api.api:app --reload
+uvicorn app.api.api:app --reload --port 8001
 ```
 
 3. **Faça uma requisição para o endpoint de extração:**
