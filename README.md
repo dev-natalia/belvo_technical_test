@@ -1,65 +1,66 @@
 # OFDA Backend Challenge
 
-Este projeto é uma solução para o desafio técnico da Belvo, focado na extração de dados financeiros através de uma API.
+This project is a solution to Belvo's technical challenge, focused on extracting financial data through a simulated API.
 
-A proposta é construir um serviço robusto, resiliente e de fácil manutenção, capaz de:
-- Criar dinamicamente clientes e consentimentos.
-- Lidar com instabilidade da API externa (erros 504).
-- Armazenar dados temporários em cache.
-- Normalizar as informações obtidas e entregar uma resposta clara e padronizada.
+The goal is to build a robust, resilient, and maintainable service capable of:
+- Dynamically creating clients and consents.
+- Handling external API instability (504 errors).
+- Temporarily storing data in cache.
+- Normalizing the retrieved information and returning a clear, standardized response.
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies Used
 
 - **Python 3.11+**
 - **FastAPI**
 - **Pydantic**
 - **Requests**
-- **Tenacity** – para retry automático com backoff exponencial.
-- **Cachetools** – para armazenamento em memória com TTL.
+- **Tenacity** – for automatic retry with exponential backoff.
+- **Cachetools** – for in-memory storage with TTL.
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📂 Project Structure
 
 ```
 app/
-├── api/                      # Rotas e controllers (FastAPI)
+├── api/                      # Routes and controllers (FastAPI)
 │   └── api.py
-├── services/                 # Regras de negócio
+├── services/                 # Business logic
 │   └── extract_service.py
-├── clients/                  # Comunicação com a API externa (/dynamic-client, /consent)
+├── clients/                  # External API communication (/dynamic-client, /consent)
 │   ├── dynamic_client.py
 │   └── consents.py
-├── extractors/               # Coleta dados de contas, saldo e transações
+├── extractors/               # Fetches account, balance, and transaction data
 │   └── extractor.py
-├── normalizers/              # Converte dados crus em objetos Pydantic
+├── normalizers/              # Converts raw data into Pydantic objects
 │   └── normalizer.py
-├── schemas/                  # Modelos Pydantic usados como entrada e saída
-│   └── request.py
-├── core/                     # Utilitários compartilhados
+├── schemas/                  # Pydantic models used for input and output
+│   ├── request.py
+│   └── response.py
+├── core/                     # Shared utilities
 │   ├── cache.py
 │   └── retry_utils.py
 ```
 
 ---
 
-## ⚙️ Como Rodar
+## ⚙️ How to Run
 
-1. **Instale as dependências:**
+1. **Install the dependencies:**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. **Execute a aplicação:**
+2. **Start the application:**
 
 ```bash
-uvicorn app.api.api:app --reload --port 8001
+uvicorn app.api.api:app --reload
 ```
 
-3. **Faça uma requisição para o endpoint de extração:**
+3. **Make a request to the extraction endpoint:**
 
 ```http
 POST /extract-financial-data
@@ -68,51 +69,40 @@ Content-Type: application/json
 
 ```json
 {
-  "name": "Meu App",
-  "organization_name": "Minha Organização",
+  "name": "My App",
+  "organization_name": "My Organization",
   "organization_id": "123",
   "user_document_number": "00011122233"
 }
 ```
 
-## 🐳 Rodando com Docker
+---
 
-Se você já está usando o container da API simulada da Belvo, pode rodar este projeto em paralelo com Docker também:
+## 🧠 Implemented Strategies
 
-### 1. Construa a imagem
+### ✅ TTL Cache
 
-```bash
-docker build -t belvo-api-app .
-docker run -p 8001:8001 belvo-api-app
-```
+- `dynamic_client` and `consent` tokens are stored using `cachetools.TTLCache`.
+- This avoids unnecessary requests and improves performance.
+
+### ✅ Automatic Retry with Exponential Backoff
+
+- All unstable calls to the external API use the `tenacity` library.
+- In case of failure (e.g., 504), the request is automatically retried with increasing wait time.
+
+### ✅ Data Normalization
+
+- The extracted data is converted into Pydantic objects with essential, formatted, and standardized fields.
+- The final response includes control fields like `summary`, total number of transactions, accounts, processing time, etc.
+
+### ✅ Modular and Maintainable Code
+
+- Each component has a single responsibility.
+- Layers for extraction, caching, normalization, business logic, and external communication are well separated.
 
 ---
 
-## 🧠 Estratégias Adotadas
-
-### ✅ Cache com TTL
-
-- Tokens do `dynamic_client` e `consent` são armazenados usando `cachetools.TTLCache`.
-- Isso evita requisições desnecessárias e melhora a performance.
-
-### ✅ Retry automático com backoff exponencial
-
-- Toda chamada instável à API externa usa a biblioteca `tenacity`.
-- Em caso de falha (ex: 504), a requisição é automaticamente reexecutada com espera crescente entre tentativas.
-
-### ✅ Normalização de dados
-
-- Os dados extraídos são convertidos em objetos Pydantic, com os campos essenciais, formatados e padronizados.
-- A resposta final tem campos de controle como `summary`, número total de transações, contas, tempo de execução, etc.
-
-### ✅ Código modular e de fácil manutenção
-
-- Cada componente tem responsabilidade única.
-- As camadas de extração, cache, normalização, serviço e comunicação externa estão bem separadas.
-
----
-
-## 🧪 Exemplo de Resposta
+## 🧪 Example Response
 
 ```json
 {
@@ -134,7 +124,7 @@ docker run -p 8001:8001 belvo-api-app
           "ammount": 1000.0,
           "currency": "BRL",
           "direction": "in",
-          "description": "Transferência",
+          "description": "Transfer",
           "date": "2025-07-11T13:00:00.000Z"
         }
       ]
@@ -151,22 +141,22 @@ docker run -p 8001:8001 belvo-api-app
 
 ---
 
-## 🤖 Apoio de IA
+## 🤖 AI Support
 
-Durante o desenvolvimento deste projeto, utilizei inteligência artificial (ChatGPT) como **assistente técnico e revisora de decisões**. A IA ajudou a:
+During the development of this project, I used AI (ChatGPT) as a **technical assistant and decision reviewer**. The AI helped:
 
-- Validar ideias de estrutura e separação de responsabilidades
-- Sugerir boas práticas com bibliotecas como `tenacity` e `cachetools`
-- Identificar melhorias de legibilidade e organização
-- Apoiar na criação deste README
+- Validate ideas on structure and separation of concerns
+- Suggest best practices with libraries like `tenacity` and `cachetools`
+- Identify improvements in readability and organization
+- Support the creation of this README
 
-> Todo o código foi implementado por mim, com decisões conscientes e adaptação às necessidades do desafio.  
-> A IA foi usada como parceira de raciocínio, não como substituta de execução. 😉
+> All code was implemented by me, with conscious decisions and adaptation to the challenge requirements.  
+> AI was used as a reasoning partner, not as a code writer. 😉
 
 ---
 
-## 📌 Considerações Finais
+## 📌 Final Considerations
 
-- O projeto foi desenvolvido com foco em clareza, manutenibilidade e resiliência.
-- O uso do Pydantic foi essencial tanto na entrada quanto na saída para garantir consistência.
-- O retry e o cache tornam o sistema robusto frente a falhas externas e idempotente sempre que possível.
+- The project was developed with focus on clarity, maintainability, and resilience.
+- Pydantic was essential for ensuring consistency in both input and output.
+- Retry and cache make the system robust against external failures and idempotent whenever possible.
