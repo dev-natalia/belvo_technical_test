@@ -24,7 +24,7 @@ class Consents:
 
         consents = response.json()
         for consent in consents:
-            if consent.get("document_number") == user_document_number:
+            if consent.get("user_document_number") == user_document_number:
                 if consent.get("status") != "APPROVED":
                     raise Exception("Consent not approved")
                 return consent.get("token"), consent.get("id")

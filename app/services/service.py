@@ -1,7 +1,6 @@
-from datetime import datetime
 import time
 
-from app.core.cache import cache
+from app.core.encrypted_cache import cache
 from app.clients.clients import clients
 from app.clients.consents import consents
 from app.extractors.extractor import extractor
