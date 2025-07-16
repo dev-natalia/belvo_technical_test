@@ -7,13 +7,7 @@ class ExtractRequest(BaseModel):
     organization_name: str
     organization_id: str
     user_document_number: str
-
-    _organization_type: str = PrivateAttr(default="INDIVIDUAL")
-
-    def export_with_private(self) -> dict:
-        data = self.model_dump()
-        data["organization_type"] = self._organization_type
-        return data
+    organization_type: str = "INDIVIDUAL"
 
 
 class Balance(BaseModel):

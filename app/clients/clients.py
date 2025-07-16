@@ -6,7 +6,7 @@ BASE_URL = "http://localhost:8000"
 
 class Clients:
     def create_dynamic_client_token(self, data_source: ExtractRequest):
-        payload = data_source.export_with_private()
+        payload = data_source.model_dump()
         payload.pop("user_document_number")
 
         response = request_with_retry(
