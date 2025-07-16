@@ -1,10 +1,12 @@
 import os
 from cachetools import TTLCache
 from cryptography.fernet import Fernet
+from dotenv import load_dotenv
 
 
 class EncryptedCache:
     def __init__(self):
+        load_dotenv()
         self.dynamic_client_cache = TTLCache(maxsize=100, ttl=86400)  # 24h
         self.consent_cache = TTLCache(maxsize=100, ttl=3600)  # 1h
 
