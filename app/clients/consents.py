@@ -6,7 +6,7 @@ BASE_URL = "http://localhost:8000"
 class Consents:
     def create_consent(self, user_document_number: str, token: str):
         headers = {"Authorization": f"{token}"}
-        payload = {"document_number": user_document_number}
+        payload = {"user_document_number": user_document_number}
 
         response = request_with_retry(
             "POST", f"{BASE_URL}/consent/", headers=headers, json=payload

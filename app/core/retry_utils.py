@@ -10,7 +10,7 @@ from fastapi import HTTPException
 
 
 @retry(
-    stop=stop_after_attempt(5),
+    stop=stop_after_attempt(10),
     wait=wait_exponential(multiplier=0.5, max=5),
     retry=retry_if_exception_type(Timeout),
     reraise=True,
@@ -18,6 +18,9 @@ from fastapi import HTTPException
 def request_with_retry(method: str, url: str, **kwargs):
     try:
         response = requests.request(method, url, **kwargs)
+
+        if response.status_code == 504:
+            raise requests.exceptions.Timeout()
 
         if response.status_code == 422:
             detail = "Validation error."
@@ -36,10 +39,7 @@ def request_with_retry(method: str, url: str, **kwargs):
         return response
 
     except Timeout:
-        raise HTTPException(
-            status_code=504,
-            detail="Timeout: external API did not respond in time.",
-        )
+        raise
 
     except Exception as err:
         raise HTTPException(status_code=502, detail=f"Unexpected error: {str(err)}")
