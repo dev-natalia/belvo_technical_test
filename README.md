@@ -75,6 +75,7 @@ Content-Type: application/json
   "name": "My App",
   "organization_name": "My Organization",
   "organization_id": "123",
+  "organization_type": "INDIVIDUAL",
   "user_document_number": "00011122233"
 }
 ```
@@ -111,15 +112,16 @@ All handlers return structured responses with meaningful `message` and `detail` 
 
 ## 🧠 Key Design Decisions
 
-### ✅ In-Memory Caching with TTL
+### ✅ In-Memory Caching with TTL and Encryption
 
 - `dynamic_client` and `consent` tokens are cached using `cachetools.TTLCache`
 - Avoids unnecessary requests and improves performance
+- Encrypts sensible data
 
 ### ✅ Automatic Retry with Exponential Backoff
 
 - All unstable external API calls are wrapped with the `tenacity` library
-- On failures (e.g., 504), requests are automatically retried with increasing wait times
+- On failures 504, requests are automatically retried with increasing wait times
 
 ### ✅ Data Normalization
 
