@@ -5,7 +5,8 @@ This project is a solution for Belvo's technical challenge, focused on extractin
 The goal is to build a robust, resilient, and maintainable service capable of:
 - Dynamically creating clients and consents.
 - Handling instability in the external API (504 errors).
-- Storing temporary data in cache.
+- Handling errors.
+- Storing temporary data in cache with encryption.
 - Normalizing extracted data and returning a clear, standardized response.
 
 ---
@@ -18,6 +19,7 @@ The goal is to build a robust, resilient, and maintainable service capable of:
 - **Requests**
 - **Tenacity** – for automatic retry with exponential backoff.
 - **Cachetools** – for in-memory storage with TTL.
+- **Fernet** - for encrypt sensible data
 
 ---
 
@@ -40,7 +42,7 @@ app/
 │   ├── request.py
 │   └── response.py
 ├── core/                     # Shared utilities
-│   ├── cache.py
+│   ├── encrypted_cache.py
 │   ├── retry_utils.py
 │   └── error_handlers.py
 ```
